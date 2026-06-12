@@ -36,4 +36,5 @@ cat /tmp/oldnews_ocr.I9wHV6 llm_instructions.md | pbcopy
 ```
 
 
-That's it! You can now double check that the output makes sense! 
+That's it! You can now double check that the output makes sense! If it does, you can upload it to our [article repository](https://github.com/victorelgersma/oldnews-article-repo)
+
