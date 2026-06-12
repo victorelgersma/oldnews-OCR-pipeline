@@ -1,6 +1,9 @@
 
+- [ ] remake this from scratch
+- [x] put this on github and symlink to the Nextcloud file which hosts the images. 
+- [x] put this on github and symlink to the Nextcloud file which hosts the images. 
 - [ ] remove the manual copy step
-- [ ] put this on github and symlink to the Nextcloud file which hosts the images. 
 - [ ] github should include markdown, but not images. 
 - [ ] then I will need two deploy steps. One from Nextcloud and one from the repo. Or actually the repo deploy step can handle the symlink
+- [ ] i.e host image files and text files separately. Also don't host all the intermediate steps
 - [ ] find a way to add a little boxed commentary with a two sentence summary of what this actually is. Maybe put it on the main site. 

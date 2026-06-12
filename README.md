@@ -1,52 +1,39 @@
-# Old News LLM Pipeline
+# Digital Humanities Pipeline
 
-This repo serves as the OCR pipeline powering oldnews.vjbe.net. It is free software. 
+Currently only available on mac, but trivially generalizable to linux (just replace `pbcopy` with `xclip --selection clipboard` or whatever you use to copy stuff to your clipboard on a linux box). 
 
-# Dependencies
+## Getting started
 
-- Bash 5
-- Tesseract
+In order to run the scripts in your terminal, you will need to install `homebrew` (https://brew.sh/) `bash 5` and `tesseract`
 
-Running the following command should do the trick
+After you have installed homebrew, run the following commands: 
+
 ```
 brew install bash
 brew install tesseract
 ```
 
-If you don't have homebrew installed, follow the instructions here: https://brew.sh/
+Set the environment variable `OLDNEWS_OCR_FOLDER` to the folder with screenshots of your newspaper article. Both .png and .jpeg should work. 
 
-# Workflow
-
-0. start by adding the metadata to the other repo and check that the file appears on the homepage
-1. Make sure the article you want to digitize has a corresponding journal name under 'img'
-i.e 
-
-```sh
-$ mkdir -p examiner/1840/03/election_news
-```
-2. use `tesseract_ocr.sh` to populate the file in `ocr_first_pass`:
+Run the file `tesseract_ocr.sh` and write the result to a temporary file. 
 
 example:
 
 ```sh
-$ ./tesseract_ocr.sh img/waterford_chronicle/1846/05/review-vestiges/
+./tesseract_ocr.sh
 ```
 
-3. use `populate_manual_corrections_folder.sh` to create an identical copy in the `ocr_manual_corrections` folder
+To view the result, you can `cat` it to the terminal:
 
 ```sh
-./populate_manual_corrections_folder.sh
+cat /tmp/oldnews_ocr.I9wHV6
 ```
 
-4. perform manual corrections on the file in the `ocr_manual_corrections` folder
+Most likely this will contain a bunch of mistakes, but open-access AI tools are very good at understanding the context and fixing them. The following command will copy both the instructions.txt file and the temporary file to your clipboard, so that you can then paste it into claude, chatgpt, gemini, deepseek, or whatever Open-Access LLM that hasn't rate limited you :) 
 
-(we recommend you only do this if you find that the LLM generated stuff is unreadable. Once the correctionsare done you can then re-run steps 5-X).
+```sh
+cat /tmp/oldnews_ocr.I9wHV6 llm_instructions.md | pbcopy
+```
 
-5. use `concatenate_edited_file.sh` to produce a single file in `concatenated_manual_corrections`
-6. use LLM software (and `instructions.txt`) to polish the file, putting the output under `concatenanted_manual_corrections` replacing the extension .txt --> .polished.md
-7. run `generate_html.sh` to convert the cleaned markdown file under `concatenated_manual_corrections` to an html file under `html_polished`
-8. Deploy the changes with `./deploy.sh`
 
-## Notes on Pandoc Usage
-
-We do not use the `-s` flag because in the final product, the article becomes a php partial that is incorporated into a larger `layout.php` file within the wider `oldnews` site. 
+That's it! You can now double check that the output makes sense! 
