@@ -1,8 +1,15 @@
 #!/opt/homebrew/bin/bash 
 
-# Bash 5 only
+# Verify tesseract is actually installed before doing anything else
+if ! command -v tesseract &> /dev/null; then
+    echo "Error: 'tesseract' is not installed or not in your PATH."
+    echo "Run: brew install tesseract"
+    exit 1
+fi
 
-# Ensure the required environment variable is set
+# Ensure the required folder variable is set
+OLDNEWS_OCR_FOLDER=~/Desktop/museum-nuisance/
+
 if [ -z "$OLDNEWS_OCR_FOLDER" ]; then
     echo "Error: Environment variable \$OLDNEWS_OCR_FOLDER is not set."
     exit 1
@@ -13,26 +20,29 @@ if [ ! -d "$OLDNEWS_OCR_FOLDER" ]; then
     exit 1
 fi
 
-# Create a secure temporary file to consolidate the OCR results
+# Create a secure temporary file
 temp_ocr_out=$(mktemp /tmp/oldnews_ocr.XXXXXX)
 
-# Enable nullglob so the loop doesn't fail if an extension is missing
-# Enable nocaseglob so it catches .PNG, .png, .JPEG, .jpg, etc.
+# Enable nullglob and nocaseglob safely
 shopt -s nullglob nocaseglob
 
 echo "Beginning OCR processing from: $OLDNEWS_OCR_FOLDER"
 echo "Results will be stored in temporary file: $temp_ocr_out"
 
-# Loop through both png and jpeg variations
-for input_file in "$OLDNEWS_OCR_FOLDER"/*.{png,jpeg,jpg}; do
-    filename=$(basename "$input_file")
-    echo "Processing image: $filename"
+# Change directory into the folder temporarily so globbing is perfectly clean
+cd "$OLDNEWS_OCR_FOLDER" || exit 1
+
+# Loop through files safely by matching individual patterns explicitly
+for input_file in *.png *.jpeg *.jpg; do
+    # Verify it's actually a file just in case
+    [ -f "$input_file" ] || continue
     
-    # Run Tesseract streaming directly to standard output, then append to our temp file
-    # stdout is specified by using '-' or 'stdout' depending on tesseract version wrappers
-    tesseract --oem 1 --psm 4 "$input_file" stdout >> "$temp_ocr_out" 2>/dev/null
+    echo "Processing image: $input_file"
     
-    # Add a newline spacer between processed images
+    # Using '-' forces Tesseract to send plain text straight to standard output
+    tesseract --oem 1 --psm 4 "$input_file" - >> "$temp_ocr_out" 2>/dev/null
+    
+    # Add a clean newline spacer
     echo -e "\n" >> "$temp_ocr_out"
 done
 

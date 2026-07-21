@@ -73,3 +73,10 @@ When you write your "Notes on the OCR Cleanup" please title it "LLM notes on OCR
 One bit of liberty you can take is to italicize book names, i.e if you come across Architecture of the Heavens, _Architecture of the Heavens_ is more likely to be accurate. 
 
 Fix broken words caused by line breaks. If there is anything that you are not very confident about let me know, and I will dig into the original photocopies to clarify it. 
+
+Something like, give us a pithy one-line summary, and give it to me in JSON format, also adding the title in there:
+
+{
+  "title": "Tuesday's Post",
+  "summary": "Deaths of Cold in Germany; French army adopts blue uniforms"
+}

@@ -15,6 +15,10 @@ brew install tesseract
 
 Set the environment variable `OLDNEWS_OCR_FOLDER` to the folder with screenshots of your newspaper article. Both .png and .jpeg should work. 
 
+```sh
+export OLDNEWS_OCR_FOLDER
+```
+
 Run the file `tesseract_ocr.sh` and write the result to a temporary file. 
 
 example:
